@@ -93,9 +93,8 @@ void MainMenu()
       break;
     }
 
-  } while (MenuNumber != '4');
-  /// by selecting number 4 we get out of the function
-  /// and the program closes.
+  } while (true);
+
 }
 
 void RunGame()
