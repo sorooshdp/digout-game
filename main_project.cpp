@@ -26,24 +26,8 @@ bool Run_Game;
 
 using namespace std;
 
-// declaring all the functions.
-bool CheckLife_Score();
-void RunGame();
-void SetGlobalValues();
-void BuildGameField();
-void PrintGameField();
-void GetInput();
-void DoAction();
-void PrintResult();
-void ApplyGravity();
-void MainMenu();
-void PrintRules();
 void SetInitialAmount();
-void SetAmount();
-void OpenFile();
-void WriteRecord();
-void WriteName();
-
+void MainMenu();
 int main()
 {
 
@@ -53,6 +37,9 @@ int main()
   return 0;
 }
 
+void RunGame();
+void SetAmount();
+void OpenFile();
 /// prints the menu for the game until user
 /// selects number 4.
 void MainMenu()
@@ -61,7 +48,7 @@ void MainMenu()
 
   do
   {
-    system("cls");
+    system("cls"); /// cleans the screen for when we get back to menu.
     cout << "1.start game\n"
          << "2.settings\n"
          << "3.records\n"
@@ -89,20 +76,29 @@ void MainMenu()
       break;
 
     case '4':
-    exit(0);
+      exit(0);
       break;
     }
 
   } while (true);
-
 }
+
+void SetGlobalValues(); /// declare needed functions for "RunGame".
+void PrintRules();
+void WriteName();
+void BuildGameField();
+void PrintGameField();
+void GetInput();
+void DoAction();
+void PrintResult();
 
 void RunGame()
 {
   SetGlobalValues();
-  PrintRules();
+  PrintRules(); /// prints rules of the game for player.
   BuildGameField();
-  WriteName();
+  WriteName(); /// to get player's name.
+  system("cls");
 
   do
   {
@@ -207,189 +203,88 @@ void GetInput()
   Action = getch();
 }
 
+void GoRight();
+void GoDown();
+void GoUp();
+void GoLeft();
+void ApplyGravity();
+void WriteRecord();
 /// updates the game field beside the input taken in the "GetInput" function.
 void DoAction()
 {
   if (Action == 'i')
   {
-    /// player can only dig through "#" blocks.
+    /// player can dig through "#" blocks only.
     if (GameField[Player_y - 1][Player_x] == '#')
     {
       GameField[Player_y - 1][Player_x] = '_';
     }
   }
-  if (Action == 'k')
+  else if (Action == 'k')
   {
     if (GameField[Player_y + 1][Player_x] == '#')
     {
       GameField[Player_y + 1][Player_x] = '_';
     }
   }
-  if (Action == 'j')
+  else if (Action == 'j')
   {
     if (GameField[Player_y][Player_x - 1] == '#')
     {
       GameField[Player_y][Player_x - 1] = '_';
     }
   }
-  if (Action == 'l')
+  else if (Action == 'l')
   {
     if (GameField[Player_y][Player_x + 1] == '#')
     {
       GameField[Player_y][Player_x + 1] = '_';
     }
   }
-
-  /// when player moves through a block we have to check if there is any
-  /// rocks coins elixir or bombs in that block and update the board according to that.
-  /// and we also have to update the player location with each move (the "Player_x" and
-  ///"Player_y" global variables).
-  if (Action == 'w')
+  else if (Action == 'w')
   {
-    if (GameField[Player_y - 1][Player_x] == '_')
-    {
-      GameField[Player_y][Player_x] = '_';
-      GameField[Player_y - 1][Player_x] = '!';
-      Player_y--;
-    }
-    else if (GameField[Player_y - 1][Player_x] == '$')
-    {
-      GameField[Player_y][Player_x] = '_';
-      GameField[Player_y - 1][Player_x] = '!';
-      Player_y--;
-      Score++;
-    }
-    else if (GameField[Player_y - 1][Player_x] == '+')
-    {
-      GameField[Player_y][Player_x] = '_';
-      GameField[Player_y - 1][Player_x] = '!';
-      Player_y--;
-      LifeAmount++;
-    }
-    else if (GameField[Player_y - 1][Player_x] == 'O')
-    {
-      GameField[Player_y][Player_x] = '_';
-      GameField[Player_y - 1][Player_x] = '!';
-      Player_y--;
-      LifeAmount--;
-    }
+    GoUp();
   }
-  if (Action == 'a')
+  else if (Action == 'a')
   {
-    if (GameField[Player_y][Player_x - 1] == '_')
-    {
-      GameField[Player_y][Player_x] = '_';
-      GameField[Player_y][Player_x - 1] = '!';
-      Player_x--;
-    }
-    else if (GameField[Player_y][Player_x - 1] == '$')
-    {
-      GameField[Player_y][Player_x] = '_';
-      GameField[Player_y][Player_x - 1] = '!';
-      Player_x--;
-      Score++;
-    }
-    else if (GameField[Player_y][Player_x - 1] == '+')
-    {
-      GameField[Player_y][Player_x] = '_';
-      GameField[Player_y][Player_x - 1] = '!';
-      Player_x--;
-      LifeAmount++;
-    }
-    else if (GameField[Player_y][Player_x - 1] == 'O')
-    {
-      GameField[Player_y][Player_x] = '_';
-      GameField[Player_y][Player_x - 1] = '!';
-      Player_x--;
-      LifeAmount--;
-    }
+    GoLeft();
   }
-  if (Action == 's')
+  else if (Action == 's')
   {
-    if (GameField[Player_y + 1][Player_x] == '_')
-    {
-      GameField[Player_y][Player_x] = '_';
-      GameField[Player_y + 1][Player_x] = '!';
-      Player_y++;
-    }
-    else if (GameField[Player_y + 1][Player_x] == '$')
-    {
-      GameField[Player_y][Player_x] = '_';
-      GameField[Player_y + 1][Player_x] = '!';
-      Player_y++;
-      Score++;
-    }
-    else if (GameField[Player_y + 1][Player_x] == '+')
-    {
-      GameField[Player_y][Player_x] = '_';
-      GameField[Player_y + 1][Player_x] = '!';
-      Player_y++;
-      LifeAmount++;
-    }
-    else if (GameField[Player_y + 1][Player_x] == 'O')
-    {
-      GameField[Player_y][Player_x] = '_';
-      GameField[Player_y + 1][Player_x] = '!';
-      Player_y++;
-      LifeAmount--;
-    }
+    GoDown();
   }
-  if (Action == 'd')
+  else if (Action == 'd')
   {
-    if (GameField[Player_y][Player_x + 1] == '_')
-    {
-      GameField[Player_y][Player_x] = '_';
-      GameField[Player_y][Player_x + 1] = '!';
-      Player_x++;
-    }
-    else if (GameField[Player_y][Player_x + 1] == '$')
-    {
-      GameField[Player_y][Player_x] = '_';
-      GameField[Player_y][Player_x + 1] = '!';
-      Player_x++;
-      Score++;
-    }
-    else if (GameField[Player_y][Player_x + 1] == '+')
-    {
-      GameField[Player_y][Player_x] = '_';
-      GameField[Player_y][Player_x + 1] = '!';
-      Player_x++;
-      LifeAmount++;
-    }
-    else if (GameField[Player_y][Player_x + 1] == 'O')
-    {
-      GameField[Player_y][Player_x] = '_';
-      GameField[Player_y][Player_x + 1] = '!';
-      Player_x++;
-      LifeAmount--;
-    }
+    GoRight();
   }
-  if (Action == 'q') /// for going back to the main menu.
+  else if (Action == 'q') /// for going back to the main menu.
   {
+    WriteRecord();
     MainMenu();
   }
   ApplyGravity();
 }
 
+bool CheckLife_Score();
 void ApplyGravity()
 {
   while (true)
   {
-    int Falls = 0;///for counting falls each time loop starts.
+    int Falls = 0; /// for counting falls each time loop starts.
     for (int y = 0; y < 5; y++)
     {
       for (int x = 0; x < 10; x++)
       {
         if (GameField[y][x] == '@')
         {
-          if ((GameField[y + 2][x] == '!') && (GameField[y + 1][x] == '_'))/// to check if a rock falls on player
+          if ((GameField[y + 2][x] == '!') && (GameField[y + 1][x] == '_')) /// to check if a rock falls on player
           {
             Falls++;
             LifeAmount = 0; /// stops the main loop by turning "Run_Game" to zero in "CheckLife_Score" function.
             GameField[y][x] = '_';
             GameField[y + 2][x] = '@';
           }
-          else if (GameField[y + 1][x] == '_')///to update rock's place if there is free space under it.
+          else if (GameField[y + 1][x] == '_') /// to update rock's place if there is free space under it.
           {
             Falls++;
             GameField[y][x] = '_';
@@ -454,7 +349,7 @@ void ApplyGravity()
   CheckLife_Score();
 }
 
-///to break from the "RunGame" function if player has win or lose the game.
+/// to break from the "RunGame" function if player has win or lose the game.
 bool CheckLife_Score()
 {
   if (LifeAmount == 0 || Score == CoinsAmount)
@@ -501,10 +396,9 @@ void PrintRules()
        << "you can get one life by getting elixir(+).\n\n";
 }
 
-
 void SetAmount()
 {
-  char Element, Amount;
+  char Element;
 
   cout << "select the element you want to change.\n"
        << "1.life\n"
@@ -558,15 +452,14 @@ void SetAmount()
   }
 }
 
-///for opening the file and reading the information in it.
+/// for opening the file and reading the information in it.
 void OpenFile()
 {
 
   fstream records;
-  string name;
 
-  records.open("records.txt", ios::in);
-  if (records.is_open())
+  records.open("records.txt", ios::in);///"ios::in"means file is opened for reading.
+  if (records.is_open())///checks if the file is open.
   {
     string line;
     while (getline(records, line))
@@ -581,7 +474,7 @@ void OpenFile()
   getch();
 }
 
-///this function append the name of the user in existing file.
+/// this function append the name of the user in existing file.
 void WriteName()
 {
   fstream records;
@@ -589,9 +482,9 @@ void WriteName()
 
   cout << "please enter your name first\n";
 
-  records.open("records.txt", ios::app);
+  records.open("records.txt", ios::app);///"ios::app"means file is opened for appending.
 
-  if (records.is_open())
+  if (records.is_open())///checks if the file is open.
   {
     cin >> name;
     records << name;
@@ -599,15 +492,143 @@ void WriteName()
   }
 }
 
-///this function appends player record in existing file after each game.
+/// this function appends player record in existing file after each game.
 void WriteRecord()
 {
   fstream records;
-  records.open("records.txt", ios::app);
+  records.open("records.txt", ios::app);///"ios::app"means file is opened for appending.
 
-  if (records.is_open())
+  if (records.is_open())///checks if the file is open.
   {
     records << "  |  " << Score << '\n';
     records.close();
+  }
+}
+
+/// when player moves through a block we have to check if there is any
+/// rocks coins elixir or bombs in that block and update the board according to that.
+/// and we also have to update the player location with each move (the "Player_x" and
+///"Player_y" global variables).
+void GoUp()
+{
+  if (GameField[Player_y - 1][Player_x] == '_')
+  {
+    GameField[Player_y][Player_x] = '_';
+    GameField[Player_y - 1][Player_x] = '!';
+    Player_y--;
+  }
+  else if (GameField[Player_y - 1][Player_x] == '$')
+  {
+    GameField[Player_y][Player_x] = '_';
+    GameField[Player_y - 1][Player_x] = '!';
+    Player_y--;
+    Score++;
+  }
+  else if (GameField[Player_y - 1][Player_x] == '+')
+  {
+    GameField[Player_y][Player_x] = '_';
+    GameField[Player_y - 1][Player_x] = '!';
+    Player_y--;
+    LifeAmount++;
+  }
+  else if (GameField[Player_y - 1][Player_x] == 'O')
+  {
+    GameField[Player_y][Player_x] = '_';
+    GameField[Player_y - 1][Player_x] = '!';
+    Player_y--;
+    LifeAmount--;
+  }
+}
+
+void GoDown()
+{
+  if (GameField[Player_y + 1][Player_x] == '_')
+  {
+    GameField[Player_y][Player_x] = '_';
+    GameField[Player_y + 1][Player_x] = '!';
+    Player_y++;
+  }
+  else if (GameField[Player_y + 1][Player_x] == '$')
+  {
+    GameField[Player_y][Player_x] = '_';
+    GameField[Player_y + 1][Player_x] = '!';
+    Player_y++;
+    Score++;
+  }
+  else if (GameField[Player_y + 1][Player_x] == '+')
+  {
+    GameField[Player_y][Player_x] = '_';
+    GameField[Player_y + 1][Player_x] = '!';
+    Player_y++;
+    LifeAmount++;
+  }
+  else if (GameField[Player_y + 1][Player_x] == 'O')
+  {
+    GameField[Player_y][Player_x] = '_';
+    GameField[Player_y + 1][Player_x] = '!';
+    Player_y++;
+    LifeAmount--;
+  }
+}
+
+void GoRight()
+{
+  if (GameField[Player_y][Player_x + 1] == '_')
+  {
+    GameField[Player_y][Player_x] = '_';
+    GameField[Player_y][Player_x + 1] = '!';
+    Player_x++;
+  }
+  else if (GameField[Player_y][Player_x + 1] == '$')
+  {
+    GameField[Player_y][Player_x] = '_';
+    GameField[Player_y][Player_x + 1] = '!';
+    Player_x++;
+    Score++;
+  }
+  else if (GameField[Player_y][Player_x + 1] == '+')
+  {
+    GameField[Player_y][Player_x] = '_';
+    GameField[Player_y][Player_x + 1] = '!';
+    Player_x++;
+    LifeAmount++;
+  }
+  else if (GameField[Player_y][Player_x + 1] == 'O')
+  {
+    GameField[Player_y][Player_x] = '_';
+    GameField[Player_y][Player_x + 1] = '!';
+    Player_x++;
+    LifeAmount--;
+  }
+}
+
+void GoLeft()
+{
+  if (GameField[Player_y][Player_x - 1] == '_')
+  {
+    GameField[Player_y][Player_x] = '_';
+    GameField[Player_y][Player_x - 1] = '!';
+    Player_x--;
+  }
+  else if (GameField[Player_y][Player_x - 1] == '$')
+  {
+    GameField[Player_y][Player_x] = '_';
+    GameField[Player_y][Player_x - 1] = '!';
+    Player_x--;
+    Score++;
+  }
+  else if (GameField[Player_y][Player_x - 1] == '+')
+  {
+    GameField[Player_y][Player_x] = '_';
+    GameField[Player_y][Player_x - 1] = '!';
+    Player_x--;
+    LifeAmount++;
+  }
+  else if (GameField[Player_y][Player_x - 1] == 'O')
+  {
+    GameField[Player_y][Player_x] = '_';
+    GameField[Player_y][Player_x - 1] = '!';
+    Player_x--;
+    LifeAmount--;
   }
 }
